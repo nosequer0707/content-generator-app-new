@@ -21,7 +21,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'https://content-generator-app-new-9fkm-iq04vtyhr.vercel.app',
+  origin: 'https://content-generator-app-new-9fkm-iq04vtyhr.vercel.app', // cambia si tu frontend tiene otro dominio
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -31,16 +31,15 @@ app.use(cors({
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/invites', require('./routes/invites'));
 
-// Servir archivos estáticos desde el frontend compilado
-const publicPath = path.join(__dirname, 'public');
-app.use(express.static(publicPath));
+// Servir frontend compilado (solo si has copiado el build de React aquí)
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta fallback: React manejará el enrutamiento en frontend
+// Todas las demás rutas deben devolver index.html para que React maneje el frontend
 app.get('*', (req, res) => {
-  res.sendFile(path.join(publicPath, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Middleware de errores (después de las rutas)
+// Middleware de errores
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode).json({
@@ -49,7 +48,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Arrancar el servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
