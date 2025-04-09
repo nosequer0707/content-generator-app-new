@@ -45,15 +45,19 @@ app.get('/api/auth/test', (req, res) => {
 });
 
 // Ruta raíz para verificar que la API está funcionando
+app.get('*', (req, res)  => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Por esta:
 app.get('/', (req, res) => {
-  res.json({ 
-    message: 'API de Content Generator funcionando correctamente',
-    version: '1.0.0',
-    endpoints: {
-      auth: '/api/auth',
-      invites: '/api/invites'
-    }
-  });
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Y añade esta para manejar la ruta /login específicamente
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 });
 
 // Middleware para manejo de errores
