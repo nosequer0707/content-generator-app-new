@@ -25,11 +25,12 @@ app.use(cookieParser());
 
 // Configuración CORS actualizada para permitir solicitudes desde Vercel
 app.use(cors({
-  origin: '*',  // Permite todas las conexiones
+  origin: 'https://content-generator-app-new-9fkm-iq04vtyhr.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+}) );
+
 
 // Rutas API
 app.use('/api/auth', require('./routes/auth'));
