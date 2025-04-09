@@ -22,19 +22,26 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
+
+// Configuración CORS actualizada para permitir solicitudes desde Vercel
 app.use(cors({
-  origin: '*',
+  origin: 'https://content-generator-app-new-9fkm-iq04vtyhr.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-// Servir archivos estáticos del frontend
-app.use(express.static(path.join(__dirname, 'public')));
+}) );
 
 // Rutas API
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/invites', require('./routes/invites'));
+
+// Ruta para verificar que la API está funcionando
+app.get('/api/auth/test', (req, res) => {
+  res.json({ 
+    message: 'API de Content Generator funcionando correctamente',
+    version: '1.0.0'
+  });
+});
 
 // Ruta raíz para verificar que la API está funcionando
 app.get('/', (req, res) => {
@@ -63,3 +70,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en el puerto ${PORT}`);
 });
+
