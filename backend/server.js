@@ -8,10 +8,10 @@ const path = require('path');
 // Cargar variables de entorno
 dotenv.config();
 
-// Conectar a la base de datos
+// Conectar a MongoDB
 connectDB();
 
-// Importar función para crear superusuario
+// Crear superusuario
 const createSuperUser = require('./config/create-super-user');
 createSuperUser();
 
@@ -20,15 +20,12 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-
 app.use(cors({
-  origin: 'https://content-generator-app-new-9fkm-iq04vtyhr.vercel.app', // cambia esto si tu dominio cambia
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: 'https://content-generator-app-new-9fkm-iq04vtyhr.vercel.app',
+  credentials: true
 }));
 
-// Rutas API
+// Rutas de la API
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/invites', require('./routes/invites'));
 
@@ -41,17 +38,17 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Servir archivos estáticos del frontend
-app.use(express.static(path.join(__dirname, 'public')));
+// Servir frontend compilado
+const publicPath = path.join(__dirname, 'public');
+app.use(express.static(publicPath));
 
-// Captura cualquier ruta que no sea API y sirve index.html
+// Esta ruta debe estar después de todas las API y rutas estáticas
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-// Iniciar servidor
+// Arrancar servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Servidor ejecutándose en el puerto ${PORT}`);
+  console.log(`Servidor escuchando en puerto ${PORT}`);
 });
-
